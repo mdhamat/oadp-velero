@@ -28,6 +28,8 @@ The backup and restore configuration using OADP is quite complex compared to IBM
 
 ### High-Level Architecture Diagram
 
+![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure1.png)
+
 ### Installation Steps
 
 Assume that you have already installed the Single Node OpenShift cluster
@@ -38,13 +40,19 @@ Assume that you have already installed the Single Node OpenShift cluster
 
     Navigate to **OperatorHub**, search for and install **ODF-LVM Operator**
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure2.png)
+
     **Create LVM Cluster**
 
     Navigate to **LVMCluster** Tab once installation is completed > Click **Create LVM Cluster**> Create
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure3.png)
+
     **Verify odf-lvm-vg1  storge class is  created**
 
     Navigate to Storage > StorageClasses
+
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure4.png)
 
     **Set odf-lvm-vg1 storage Class to default**
 
@@ -57,6 +65,8 @@ Assume that you have already installed the Single Node OpenShift cluster
     Assume that you have already installed the Multi Node OpenShift cluster
 
     Navigate to **OperatorHub**, search for and install **OpenShift Data Foundation**
+
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure5.png)
 
     **CREATING STORAGESYSTEM**
 
@@ -72,6 +82,8 @@ Assume that you have already installed the Single Node OpenShift cluster
 
     Verify OpenShift Data Foundation has installed successfully by login into **OpenShift Console** > Navigate to **Storage** > **Data Foundation** should visible underneath now & its status should be Green
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure6.png)
+
     **Verify OCS storge class are created**
 
     1.	ocs-storagecluster-cephfs
@@ -79,13 +91,19 @@ Assume that you have already installed the Single Node OpenShift cluster
     3.	ocs-storagecluster-ceph-rgw
     4.	openshift-storage.noobaa.io
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure7.png)
+
     **Set ODF Storage Class to default**
 
     ODF StorageClass is required to set default for deploying the container application with dynamic persistent volume on ODF storage:
 
     In order to make ODF StorageClass to default, Navigate to **OpenShift Console** > Go to **StorageClasses** > Click on **ODF StorageClass “ocs-storagecluster-ceph-rbd”** from the list 
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure8.png)
+
     Click + Add More > Enter the key name **“storageclass.kubernetes.io/is-default-class”** and value “true” > Save
+
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure9.png)
 
 3.  Create Backup Storage Location
 
@@ -97,11 +115,17 @@ Assume that you have already installed the Single Node OpenShift cluster
 
         Login to **IBM Cloud** > Navigate to Resource list > Find the Cloud Object Storage instance that you have created before under the Storage > Access the IBM Cloud Object Storage Instance > Click Buckets > Create Bucket 
 
+        ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure10.png)
+
         Click **Customize your bucket** > Enter **unique bucket name** > Select **Resiliency** > Select **Location** > Select **Storage Class** > Click **Create bucket**
+
+        ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure11.png)
 
     2.  Set Permission on Bucket
 
         Click **Bucket Name** > **Permissions Tab** > Select **Service ID from Access policies** > Select **Role “Writer” and Click Create access policy**
+
+        ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure12.png)
 
     3.  Copy Endpoint name
 
@@ -109,7 +133,11 @@ Assume that you have already installed the Single Node OpenShift cluster
 
         Click **Configuration Tab** > Click **Endpoints**
 
+        ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure13.png)
+
         Scroll down and copy the Direct Endpoint name from Endpoints
+
+        ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure14.png)
 
     4.  Copy Access Key and Secrete Key from Service Credential
 
@@ -121,15 +149,21 @@ Assume that you have already installed the Single Node OpenShift cluster
 
     You can install the OADP Operator from the Openshift's OperatorHub. You can search for the operator using keywords such as oadp 
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure15.png)
+
     Now click on Install
 
     Finally, click on Install again. This will create Project openshift-adp if it does not exist, and install the OADP operator in it.
+
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure16.png)
 
 5.	Create Credentials Secret for OADP OPERATOR to use
 
     Now create secret **cloud-credentials** using values obtained from IBM Cloud Object Storage bucket in Project **openshift-adp**.
 
     From OpenShift Web Console side bar navigate to **Workloads > Secrets** and click **Create > Key/value secret**
+
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure17.png)
 
     Fill out the following fields:
 
@@ -143,11 +177,15 @@ Assume that you have already installed the Single Node OpenShift cluster
   
     Note: Do not use quotes while putting values in place of INSERT_VALUE Placeholders
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure18.png)
+
 6.	CREATE THE DATAPROTECTIONAPPLICATION CUSTOM RESOURCE
 
     From side bars navigate to **Operators > Installed Operators**
 
     Create an instance of the **DataProtectionApplication** (DPA) CR by clicking on Create Instance as highlighted below:
+
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure19.png)
 
     Select Configure via: YAML view
 
@@ -195,6 +233,8 @@ Assume that you have already installed the Single Node OpenShift cluster
     Click **Create**
     Verify the status of Data Protection application is showing as **“Condition: Reconciled” and the status of BackupStorage Location is showing as  “Phase: Available”**
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure20.png)
+
 7.	Modifying Volumesnapshotclass
 
     Setting a **DeletionPolicy** of **Retain** on the **VolumeSnapshotClass** will preserve the volume snapshot in the storage system for the lifetime of the Velero backup and will prevent the deletion of the volume snapshot, in the storage system, in the event of a disaster where the namesace with the VolumeSnapshot object may be lost
@@ -222,13 +262,23 @@ Assume that you have already installed the Single Node OpenShift cluster
 
     Navigate to OpenShift Console > In **Administrator view > Projects > Create Project**
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure21.png)
+
     Enter **Name** “demoapps” and click **Create**
+
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure22.png)
 
     Switch to **Developer view** from OpenShift console > change the project to “**demoapps**” > Click **+Add**
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure23.png)
+
     Click **All services** from Developer Catalog > Search for catalog “**Node.js + PostgreSQL**” templates
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure24.png)
+
     Click catalog **“Node.js + PostgreSQL” templates > Click Instantiate Template > Verify namespace is “demoapps” > Click Create**
+
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure25.png)
 
     Wait until pods are showing in running state
 
@@ -236,11 +286,17 @@ Assume that you have already installed the Single Node OpenShift cluster
 
     Pods are in running state means it has created with PerstistentVolume successfully using odf-lvm-vg1 default StorageClass. 
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure26.png)
+
     In order to verify persistent volume created, Navigate to **Storage** > **PersistentVolumeClaims** > Verify **“postgresql”** is in **bound** state and its StorgeClass is “**odf-lvm-vg1**" which is a defaut StorageClass that you setup in previous steps.
+
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure27.png)
 
 9.	Backup Application
 
     From side menu, navigate to **Operators > Installed Operators Under Project openshift-adp,** click on **OADP Operator**. Under Provided APIs > **Backup**, click on **Create instance**
+
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure28.png)
 
     In name > type **demoapps-backup**
     
@@ -248,9 +304,13 @@ Assume that you have already installed the Single Node OpenShift cluster
 
     In **snapshotVolumes > Check Mark** on snapshotVolumes
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure29.png)
+
     Click **Create**.
 
     The status of backup should eventually show **Phase: Complete**
+
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure30.png)
 
 10.	Application Consistent Backup
 
@@ -302,6 +362,8 @@ Assume that you have already installed the Single Node OpenShift cluster
 
     From side menu, navigate to **Operators** > **Installed Operators** Under Project **openshift-adp**, click on **OADP Operator**. Under **Provided APIs** > **Restore**, click on **Create instance**
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure31.png)
+
     Under **Backup Name**, type **backup**
 
     In **Name** > type restore job name “restore-demoapps”
@@ -310,11 +372,15 @@ Assume that you have already installed the Single Node OpenShift cluster
 
     In **IncludedNamespaces** >  add target namespace  “**demoapps**” >  check **restorePVs**
 
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure32.png)
+
     Click **Create**.
 
     The status of **restore** should eventually show **Phase: Completed**.
 
     After a few minutes, you should see the chat application up and running. You can check via **Workloads > Pods > Project: demoapps** and see the following 
+
+    ![alt text](https://github.com/mdhamat/oadp-velero/blob/3f86af055fc0f38641783c27d41a7fcb57225117/Images/Figure33.png)
 
     Try to access the application via URL
 
