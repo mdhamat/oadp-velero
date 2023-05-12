@@ -351,10 +351,10 @@ Assume that you have already installed the Single Node OpenShift cluster
 
         ```
         oc annotate pod -n demoapps -l name=postgresql \
-            pre.hook.backup.velero.io/command='["/bin/bash", “-c”, “$POSTGRESQL_PREHOOK”]' \
-	        pre.hook.backup.velero.io/container=postgresql \
-            post.hook.backup.velero.io/command='["/bin/bash", “-c”, “$POSTGRESQL_POSTHOOK”]' \
-            post.hook.backup.velero.io/container=postgresq
+		pre.hook.backup.velero.io/command='["/bin/bash", "-c", 'psql  -c "\"select pg_start_backup('app_cons');\""']' \ pre.hook.backup.velero.io/container=postgresql \
+		post.hook.backup.velero.io/command='["/bin/bash", "-c", 'psql -c "\"select pg_stop_backup( );\"""]'\ 
+		post.hook.backup.velero.io/container=postgresql
+
         ```
 11.	Restore application
 
